@@ -1,7 +1,9 @@
+import { Suspense } from "react";
 import Header from "@/components/Header";
 import HighlightBar from "@/components/HighlightBar";
 import Footer from "@/components/Footer";
 import ScrollProgress from "@/components/ScrollProgress";
+import RouteLoadingBar from "@/components/RouteLoadingBar";
 import SmoothScroll from "@/components/SmoothScroll";
 import { WishlistProvider } from "@/context/WishlistContext";
 import { CartProvider } from "@/context/CartContext";
@@ -14,6 +16,9 @@ export default async function SiteLayout({ children }: { children: React.ReactNo
     <WishlistProvider>
       <CartProvider>
         <SmoothScroll>
+          <Suspense fallback={null}>
+            <RouteLoadingBar />
+          </Suspense>
           <ScrollProgress />
           <Header settings={settings} />
           <HighlightBar />

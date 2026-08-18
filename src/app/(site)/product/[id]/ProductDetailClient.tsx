@@ -12,6 +12,7 @@ import WhatsAppIcon from "@/components/WhatsAppIcon";
 import TrustBadges from "@/components/TrustBadges";
 import ShareButton from "@/components/ShareButton";
 import ProductGallery from "@/components/ProductGallery";
+import SubmitButton from "@/components/SubmitButton";
 import { createReview } from "@/lib/actions/reviews.actions";
 import type { Prisma } from "@prisma/client";
 
@@ -260,7 +261,9 @@ export default function ProductDetailClient({
             ))}
           </select>
           <textarea name="comment" placeholder="Your review" required className="border border-clay-200 p-2" />
-          <button type="submit" className="bg-clay-900 py-2 text-sm text-sand-50">Submit Review</button>
+          <SubmitButton pendingLabel="Submitting…" className="bg-clay-900 py-2 text-sm text-sand-50 disabled:opacity-60">
+            Submit Review
+          </SubmitButton>
         </form>
       </section>
 
