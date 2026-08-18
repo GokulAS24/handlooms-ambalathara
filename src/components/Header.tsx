@@ -118,22 +118,19 @@ export default function Header({ settings }: { settings: SettingsWithRelations }
       >
         <button
           aria-label="Toggle menu"
-          className="shrink-0 text-clay-700 md:hidden"
+          className="shrink-0 text-clay-700 xl:hidden"
           onClick={() => setOpen((prev) => !prev)}
         >
           {open ? <X size={22} /> : <Menu size={22} />}
         </button>
 
-        <div className="hidden flex-1 items-center gap-2.5 md:flex">
+        <div className="hidden min-w-0 flex-1 items-center gap-2.5 xl:flex">
           {highlights.map((item) => (
             <HighlightBadge key={item.label} {...item} />
           ))}
         </div>
 
-        <Link
-          href="/"
-          className="flex flex-1 items-center justify-center md:flex-none md:absolute md:left-1/2 md:top-1/2 md:-translate-x-1/2 md:-translate-y-1/2"
-        >
+        <Link href="/" className="flex flex-1 items-center justify-center xl:flex-none">
           <Logo
             markClassName="h-7 w-auto sm:h-9"
             wordmarkClassName="text-sm sm:text-lg"
@@ -142,11 +139,11 @@ export default function Header({ settings }: { settings: SettingsWithRelations }
           />
         </Link>
 
-        <div className="hidden flex-1 items-center justify-end gap-7 md:flex">
+        <div className="hidden min-w-0 flex-1 items-center justify-end gap-7 xl:flex">
           {rightLinks.map((link) => (
             <NavLink key={link.label} {...link} />
           ))}
-          <div className="flex items-center gap-5">
+          <div className="flex shrink-0 items-center gap-5">
             {isHome && (
               <ShareButton
                 title={settings.siteName}
@@ -170,7 +167,7 @@ export default function Header({ settings }: { settings: SettingsWithRelations }
           </div>
         </div>
 
-        <div className="flex shrink-0 items-center gap-3 md:hidden">
+        <div className="flex shrink-0 items-center gap-3 xl:hidden">
           {isHome && (
             <ShareButton
               title={settings.siteName}
@@ -202,7 +199,7 @@ export default function Header({ settings }: { settings: SettingsWithRelations }
           closed: { height: 0, opacity: 0 },
         }}
         transition={{ duration: 0.3, ease: "easeInOut" }}
-        className="overflow-hidden border-t border-clay-100 bg-sand-50 md:hidden"
+        className="overflow-hidden border-t border-clay-100 bg-sand-50 xl:hidden"
       >
         <motion.div
           variants={{
