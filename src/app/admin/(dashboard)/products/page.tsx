@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { getProducts, deleteProduct } from "@/lib/actions/products.actions";
+import BulkImportForm from "@/components/admin/BulkImportForm";
 
 export default async function AdminProductsPage() {
   const products = await getProducts();
@@ -10,6 +11,9 @@ export default async function AdminProductsPage() {
         <h1 className="text-2xl font-semibold">Products</h1>
         <Link href="/admin/products/new" className="bg-black px-4 py-2 text-sm text-white">New Product</Link>
       </div>
+
+      <BulkImportForm />
+
       <table className="w-full text-sm">
         <thead>
           <tr className="border-b text-left">
