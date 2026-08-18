@@ -5,6 +5,7 @@ import { useSearchParams } from "next/navigation";
 import { motion } from "framer-motion";
 import { SlidersHorizontal, X } from "lucide-react";
 import ProductCard, { type ProductCardData } from "@/components/ProductCard";
+import WhatsAppIcon from "@/components/WhatsAppIcon";
 import type { Prisma } from "@prisma/client";
 
 type CategoryWithCount = Prisma.CategoryGetPayload<{
@@ -66,9 +67,11 @@ function FilterGroup({
 export default function ShopContent({
   products,
   categories,
+  whatsappNumber,
 }: {
   products: ProductCardData[];
   categories: CategoryWithCount[];
+  whatsappNumber: string;
 }) {
   const searchParams = useSearchParams();
   const initialCategory = searchParams.get("category");
@@ -132,6 +135,15 @@ export default function ShopContent({
     setWeaves(new Set());
     setPriceBuckets(new Set());
   }
+
+  const enquiryHref = useMemo(() => {
+    const [onlyCategory] = selectedCategories;
+    const message =
+      selectedCategories.size === 1
+        ? `Hi! I'm looking for items in the "${onlyCategory}" collection but couldn't find any in stock on your website — do you have any available or expected soon?`
+        : "Hi! I couldn't find any products matching what I'm looking for on your website — could you help me find something?";
+    return `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
+  }, [selectedCategories, whatsappNumber]);
 
   const filtersPanel = (
     <>
@@ -198,9 +210,20 @@ export default function ShopContent({
           )}
 
           {filtered.length === 0 ? (
-            <div className="flex flex-col items-center gap-3 py-20 text-center">
+            <div className="flex flex-col items-center gap-4 py-20 text-center">
               <p className="text-clay-500">No products match these filters.</p>
-              <button onClick={clearAll} className="text-sm font-medium text-brand-600 hover:underline">Clear filters</button>
+              {activeFilterCount > 0 && (
+                <button onClick={clearAll} className="text-sm font-medium text-brand-600 hover:underline">Clear filters</button>
+              )}
+              <a
+                href={enquiryHref}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-2 flex items-center gap-2 rounded-sm bg-[#25D366] px-6 py-3 text-xs font-semibold uppercase tracking-[0.15em] text-sand-50 transition-colors hover:bg-[#1fb959]"
+              >
+                <WhatsAppIcon className="h-4 w-4" />
+                Ask About Availability
+              </a>
             </div>
           ) : (
             <motion.div
