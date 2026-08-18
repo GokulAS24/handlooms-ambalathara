@@ -25,9 +25,11 @@ const CLAY_900 = "#190f0a";
 export default function ProductDetailClient({
   product,
   related,
+  whatsappNumber,
 }: {
   product: ProductFull;
   related: ProductCardData[];
+  whatsappNumber: string;
 }) {
   const { isWishlisted, toggleWishlist } = useWishlist();
   const { addToCart } = useCart();
@@ -58,7 +60,7 @@ export default function ProductDetailClient({
       "Could you confirm availability?",
     ].join("\n");
     setTimeout(() => {
-      window.open(`https://wa.me/?text=${encodeURIComponent(message)}`, "_blank", "noopener,noreferrer");
+      window.open(`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`, "_blank", "noopener,noreferrer");
     }, 650);
     setTimeout(() => setRedirecting(false), 2400);
   }

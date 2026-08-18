@@ -134,7 +134,12 @@ export default function Header({ settings }: { settings: SettingsWithRelations }
           href="/"
           className="flex flex-1 items-center justify-center md:flex-none md:absolute md:left-1/2 md:top-1/2 md:-translate-x-1/2 md:-translate-y-1/2"
         >
-          <Logo markClassName="h-7 w-auto sm:h-9" wordmarkClassName="text-sm sm:text-lg" label={settings.siteName} />
+          <Logo
+            markClassName="h-7 w-auto sm:h-9"
+            wordmarkClassName="text-sm sm:text-lg"
+            label={settings.siteName}
+            markSrc={settings.logoMarkUrl ?? undefined}
+          />
         </Link>
 
         <div className="hidden flex-1 items-center justify-end gap-7 md:flex">

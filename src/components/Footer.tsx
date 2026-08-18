@@ -68,7 +68,7 @@ export default function Footer({
           className="grid grid-cols-1 gap-10 pt-12 sm:grid-cols-2 md:grid-cols-5"
         >
           <div className="sm:col-span-2">
-            <LogoFull className="h-16 w-auto" />
+            <LogoFull className="h-16 w-auto" src={settings.logoUrl} />
             <p className="mt-4 max-w-xs text-sm leading-relaxed text-clay-500">{settings.footerText}</p>
             {settings.socialLinks.length > 0 && (
               <div className="mt-4 flex flex-wrap gap-3">
