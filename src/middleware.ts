@@ -1,12 +1,15 @@
-import { NextRequest, NextResponse } from "next/server";
-import { auth } from "@/auth";
+import NextAuth from "next-auth";
+import { NextResponse } from "next/server";
+import type { NextRequest } from "next/server";
+import { authConfig } from "@/auth.config";
 
-// Server Actions POST to the same /admin/* URL as the page they're called
-// from. They're already gated individually via requireAdmin() in each
-// action. Routing them through NextAuth's auth()-wrapped middleware (even
-// when the callback itself no-ops) still triggers its own session-cookie
-// handling and corrupts the action's response, so we bypass NextAuth
-// entirely for non-GET requests instead of just no-oping inside it.
+// Uses the lightweight, provider-free config (see auth.config.ts) — the
+// full auth.ts (Prisma + bcryptjs) blew past Vercel's 1MB Edge Function
+// limit when imported here. JWT sessions only need the shared secret to
+// verify, so this separate, smaller instance works identically for the
+// "is there a valid session" check middleware actually needs.
+const { auth } = NextAuth(authConfig);
+
 export default async function middleware(req: NextRequest) {
   if (req.method !== "GET") return NextResponse.next();
 
