@@ -1,4 +1,4 @@
-import Hero from "@/components/Hero";
+import PromoCards from "@/components/PromoCards";
 import Marquee from "@/components/Marquee";
 import Collections from "@/components/Collections";
 import Stats from "@/components/Stats";
@@ -16,7 +16,7 @@ export default async function Home() {
 
   return (
     <>
-      <Hero banners={banners} />
+      <PromoCards banners={banners} />
       <Marquee />
       <Collections categories={categories} />
       <Stats />

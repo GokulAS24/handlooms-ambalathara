@@ -14,7 +14,7 @@ export default async function EditBannerPage({ params }: { params: Promise<{ id:
 
   return (
     <div>
-      <h1 className="mb-6 text-2xl font-semibold">Edit Banner</h1>
+      <h1 className="mb-6 text-2xl font-semibold">Edit Promo Card</h1>
       <BannerForm banner={banner} categories={categories} action={updateBanner.bind(null, id)} />
     </div>
   );

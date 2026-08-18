@@ -11,7 +11,7 @@ export default async function AdminDashboard() {
   const stats = [
     { label: "Products", value: products },
     { label: "Categories", value: categories },
-    { label: "Hero Banners", value: banners },
+    { label: "Promo Cards", value: banners },
     { label: "Promo Blocks", value: promos },
   ];
 

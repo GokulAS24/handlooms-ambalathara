@@ -4,7 +4,7 @@ import { auth, signOut } from "@/auth";
 const navItems = [
   { href: "/admin", label: "Dashboard" },
   { href: "/admin/settings", label: "Site Settings" },
-  { href: "/admin/banners", label: "Hero Banners" },
+  { href: "/admin/banners", label: "Promo Cards" },
   { href: "/admin/promos", label: "Promo Blocks" },
   { href: "/admin/pages", label: "Pages" },
   { href: "/admin/categories", label: "Categories" },

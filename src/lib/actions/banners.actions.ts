@@ -7,7 +7,7 @@ import { prisma } from "@/lib/prisma";
 import { auth } from "@/auth";
 
 const bannerSchema = z.object({
-  title: z.string(),
+  title: z.string().optional().default(""),
   subtitle: z.string().optional(),
   desktopImageUrl: z.string().min(1),
   mobileImageUrl: z.string().optional(),
@@ -45,7 +45,7 @@ export async function getActiveHeroBanners() {
 export async function createBanner(formData: FormData) {
   await requireAdmin();
   const parsed = bannerSchema.parse({
-    title: formData.get("title"),
+    title: formData.get("title") || undefined,
     subtitle: formData.get("subtitle") || undefined,
     desktopImageUrl: formData.get("desktopImageUrl"),
     mobileImageUrl: formData.get("mobileImageUrl") || undefined,
@@ -63,7 +63,7 @@ export async function createBanner(formData: FormData) {
 export async function updateBanner(id: string, formData: FormData) {
   await requireAdmin();
   const parsed = bannerSchema.parse({
-    title: formData.get("title"),
+    title: formData.get("title") || undefined,
     subtitle: formData.get("subtitle") || undefined,
     desktopImageUrl: formData.get("desktopImageUrl"),
     mobileImageUrl: formData.get("mobileImageUrl") || undefined,

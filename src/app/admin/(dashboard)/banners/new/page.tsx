@@ -7,7 +7,7 @@ export default async function NewBannerPage() {
 
   return (
     <div>
-      <h1 className="mb-6 text-2xl font-semibold">New Banner</h1>
+      <h1 className="mb-6 text-2xl font-semibold">New Promo Card</h1>
       <BannerForm categories={categories} action={createBanner} />
     </div>
   );

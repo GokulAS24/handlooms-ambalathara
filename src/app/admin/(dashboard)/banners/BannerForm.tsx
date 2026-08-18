@@ -14,11 +14,11 @@ export default function BannerForm({
 }) {
   return (
     <form action={action} className="flex max-w-xl flex-col gap-3">
-      <label className="text-sm">Title</label>
-      <input name="title" defaultValue={banner?.title} className="border p-2" />
-
-      <label className="text-sm">Subtitle</label>
-      <input name="subtitle" defaultValue={banner?.subtitle ?? ""} className="border p-2" />
+      <p className="text-sm text-gray-600">
+        Each promo card is just an image — bake any headline, price, or call-to-action text
+        directly into the image itself, the way a Flipkart-style deal banner works. Recommended
+        size: a compact wide image, roughly 700×300px.
+      </p>
 
       <div className="flex flex-wrap gap-6">
         <ImageUpload
@@ -33,9 +33,6 @@ export default function BannerForm({
         />
       </div>
 
-      <label className="text-sm">CTA Label</label>
-      <input name="ctaLabel" defaultValue={banner?.ctaLabel ?? ""} placeholder="e.g. Shop the Collection" className="border p-2" />
-
       <label className="text-sm">Links to Category</label>
       <select name="categoryId" defaultValue={banner?.categoryId ?? ""} className="border p-2">
         <option value="">None — no link</option>
@@ -44,11 +41,9 @@ export default function BannerForm({
         ))}
       </select>
       <p className="text-xs text-gray-500">
-        The CTA button links to this category&apos;s shop page. Only shown when both a CTA Label and a category are set.
+        Clicking the card takes shoppers to this category&apos;s shop page. Leave as &quot;None&quot;
+        for a purely decorative card.
       </p>
-
-      <label className="text-sm">Discount Text</label>
-      <input name="discountText" defaultValue={banner?.discountText ?? ""} className="border p-2" />
 
       <label className="text-sm">Order</label>
       <input name="order" type="number" defaultValue={banner?.order ?? 0} className="border p-2" />
@@ -58,7 +53,7 @@ export default function BannerForm({
         Active
       </label>
 
-      <button type="submit" className="mt-2 bg-black py-2 text-white">Save Banner</button>
+      <button type="submit" className="mt-2 bg-black py-2 text-white">Save Promo Card</button>
     </form>
   );
 }
