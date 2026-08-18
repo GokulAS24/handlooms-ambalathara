@@ -6,6 +6,7 @@ import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { auth } from "@/auth";
 import { slugify } from "@/lib/slugify";
+import { AUDIENCES } from "@/lib/audience";
 
 const productSchema = z.object({
   name: z.string().min(1),
@@ -17,6 +18,7 @@ const productSchema = z.object({
   fabric: z.string().optional(),
   pattern: z.string().optional(),
   washCare: z.string().optional(),
+  audience: z.enum(AUDIENCES).optional(),
   categoryId: z.string().min(1),
   isActive: z.coerce.boolean().default(true),
   isFeatured: z.coerce.boolean().default(false),
@@ -57,6 +59,7 @@ export async function createProduct(formData: FormData) {
     fabric: formData.get("fabric") || undefined,
     pattern: formData.get("pattern") || undefined,
     washCare: formData.get("washCare") || undefined,
+    audience: formData.get("audience") || undefined,
     categoryId: formData.get("categoryId"),
     isActive: formData.get("isActive") === "on",
     isFeatured: formData.get("isFeatured") === "on",
@@ -89,12 +92,16 @@ export async function updateProduct(id: string, formData: FormData) {
     fabric: formData.get("fabric") || undefined,
     pattern: formData.get("pattern") || undefined,
     washCare: formData.get("washCare") || undefined,
+    audience: formData.get("audience") || undefined,
     categoryId: formData.get("categoryId"),
     isActive: formData.get("isActive") === "on",
     isFeatured: formData.get("isFeatured") === "on",
   });
 
-  await prisma.product.update({ where: { id }, data: { ...parsed, slug: slugify(parsed.name) } });
+  await prisma.product.update({
+    where: { id },
+    data: { ...parsed, audience: parsed.audience ?? null, slug: slugify(parsed.name) },
+  });
 
   revalidatePath("/shop");
   revalidatePath(`/product/${id}`);

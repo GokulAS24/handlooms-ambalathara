@@ -2,6 +2,7 @@
 
 import { Category, Product } from "@prisma/client";
 import MultiImageUpload from "@/components/admin/MultiImageUpload";
+import { AUDIENCES, AUDIENCE_LABELS } from "@/lib/audience";
 
 export default function ProductForm({
   product,
@@ -41,6 +42,17 @@ export default function ProductForm({
           <option key={c.id} value={c.id}>{c.name}</option>
         ))}
       </select>
+
+      <label className="text-sm">Audience</label>
+      <select name="audience" defaultValue={product?.audience ?? ""} className="border p-2">
+        <option value="">Not set</option>
+        {AUDIENCES.map((a) => (
+          <option key={a} value={a}>{AUDIENCE_LABELS[a]}</option>
+        ))}
+      </select>
+      <p className="text-xs text-gray-500">
+        Controls which of the Men / Women / Kids links on the site show this product.
+      </p>
 
       <div className="grid grid-cols-2 gap-3">
         <div>

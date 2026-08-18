@@ -139,6 +139,7 @@ model Product {
   fabric         String?
   pattern        String?
   washCare       String?
+  audience       String?
   avgRating      Float           @default(0)
   reviewCount    Int             @default(0)
   categoryId     String

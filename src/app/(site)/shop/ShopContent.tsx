@@ -6,6 +6,7 @@ import { motion } from "framer-motion";
 import { SlidersHorizontal, X } from "lucide-react";
 import ProductCard, { type ProductCardData } from "@/components/ProductCard";
 import WhatsAppIcon from "@/components/WhatsAppIcon";
+import { AUDIENCES, AUDIENCE_LABELS, isAudience } from "@/lib/audience";
 import type { Prisma } from "@prisma/client";
 
 type CategoryWithCount = Prisma.CategoryGetPayload<{
@@ -35,9 +36,9 @@ function FilterGroup({
   onToggle,
 }: {
   title: string;
-  options: { label: string; count: number }[];
+  options: { label: string; value?: string; count: number }[];
   selected: Set<string>;
-  onToggle: (label: string) => void;
+  onToggle: (value: string) => void;
 }) {
   if (options.length === 0) return null;
 
@@ -45,20 +46,23 @@ function FilterGroup({
     <div className="border-b border-clay-100 py-5">
       <h3 className="text-xs font-semibold uppercase tracking-wider text-clay-800">{title}</h3>
       <div className="mt-3 flex flex-col gap-2.5">
-        {options.map((opt) => (
-          <label key={opt.label} className="flex cursor-pointer items-center justify-between text-sm text-clay-600">
-            <span className="flex items-center gap-2.5">
-              <input
-                type="checkbox"
-                checked={selected.has(opt.label)}
-                onChange={() => onToggle(opt.label)}
-                className="h-4 w-4 rounded-sm border-clay-300 text-clay-800 accent-clay-800"
-              />
-              {opt.label}
-            </span>
-            <span className="text-xs text-clay-400">{opt.count}</span>
-          </label>
-        ))}
+        {options.map((opt) => {
+          const value = opt.value ?? opt.label;
+          return (
+            <label key={value} className="flex cursor-pointer items-center justify-between text-sm text-clay-600">
+              <span className="flex items-center gap-2.5">
+                <input
+                  type="checkbox"
+                  checked={selected.has(value)}
+                  onChange={() => onToggle(value)}
+                  className="h-4 w-4 rounded-sm border-clay-300 text-clay-800 accent-clay-800"
+                />
+                {opt.label}
+              </span>
+              <span className="text-xs text-clay-400">{opt.count}</span>
+            </label>
+          );
+        })}
       </div>
     </div>
   );
@@ -78,18 +82,34 @@ export default function ShopContent({
   const initialCategoryName = initialCategory
     ? categories.find((c) => c.slug === initialCategory)?.name
     : undefined;
+  const initialAudience = searchParams.get("audience")?.toUpperCase();
+  const initialSearch = searchParams.get("search") ?? "";
 
   const [selectedCategories, setSelectedCategories] = useState<Set<string>>(
     () => new Set(initialCategoryName ? [initialCategoryName] : [])
+  );
+  const [selectedAudiences, setSelectedAudiences] = useState<Set<string>>(
+    () => new Set(isAudience(initialAudience) ? [initialAudience] : [])
   );
   const [weaves, setWeaves] = useState<Set<string>>(new Set());
   const [priceBuckets, setPriceBuckets] = useState<Set<string>>(new Set());
   const [sortBy, setSortBy] = useState("featured");
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState(initialSearch);
 
   const categoryOptions = useMemo(
     () => categories.map((c) => ({ label: c.name, count: c._count.products })),
     [categories]
+  );
+
+  const audienceOptions = useMemo(
+    () =>
+      AUDIENCES.map((a) => ({
+        label: AUDIENCE_LABELS[a],
+        value: a,
+        count: products.filter((p) => p.audience === a).length,
+      })).filter((opt) => opt.count > 0),
+    [products]
   );
 
   const weaveOptions = useMemo(() => {
@@ -113,11 +133,17 @@ export default function ShopContent({
   }
 
   const filtered = useMemo(() => {
+    const search = searchQuery.trim().toLowerCase();
     let list = products.filter((p) => {
       const categoryMatch = selectedCategories.size === 0 || selectedCategories.has(p.category.name);
+      const audienceMatch = selectedAudiences.size === 0 || (p.audience && selectedAudiences.has(p.audience));
       const weaveMatch = weaves.size === 0 || (p.weaveType && weaves.has(p.weaveType));
       const priceMatch = priceBuckets.size === 0 || PRICE_BUCKETS.some((b) => priceBuckets.has(b.label) && b.test(p.price));
-      return categoryMatch && weaveMatch && priceMatch;
+      const searchMatch =
+        !search ||
+        p.name.toLowerCase().includes(search) ||
+        p.description.toLowerCase().includes(search);
+      return categoryMatch && audienceMatch && weaveMatch && priceMatch && searchMatch;
     });
 
     list = [...list];
@@ -126,28 +152,32 @@ export default function ShopContent({
     else if (sortBy === "rating-desc") list.sort((a, b) => b.avgRating - a.avgRating);
 
     return list;
-  }, [products, selectedCategories, weaves, priceBuckets, sortBy]);
+  }, [products, selectedCategories, selectedAudiences, weaves, priceBuckets, searchQuery, sortBy]);
 
-  const activeFilterCount = selectedCategories.size + weaves.size + priceBuckets.size;
+  const activeFilterCount = selectedCategories.size + selectedAudiences.size + weaves.size + priceBuckets.size;
 
   function clearAll() {
     setSelectedCategories(new Set());
+    setSelectedAudiences(new Set());
     setWeaves(new Set());
     setPriceBuckets(new Set());
+    setSearchQuery("");
   }
 
   const enquiryHref = useMemo(() => {
     const [onlyCategory] = selectedCategories;
-    const message =
-      selectedCategories.size === 1
+    const message = searchQuery.trim()
+      ? `Hi! I searched for "${searchQuery.trim()}" on your website but couldn't find anything — do you have this available or expected soon?`
+      : selectedCategories.size === 1
         ? `Hi! I'm looking for items in the "${onlyCategory}" collection but couldn't find any in stock on your website — do you have any available or expected soon?`
         : "Hi! I couldn't find any products matching what I'm looking for on your website — could you help me find something?";
     return `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
-  }, [selectedCategories, whatsappNumber]);
+  }, [selectedCategories, searchQuery, whatsappNumber]);
 
   const filtersPanel = (
     <>
       <FilterGroup title="Category" options={categoryOptions} selected={selectedCategories} onToggle={(v) => toggle(selectedCategories, setSelectedCategories, v)} />
+      <FilterGroup title="Audience" options={audienceOptions} selected={selectedAudiences} onToggle={(v) => toggle(selectedAudiences, setSelectedAudiences, v)} />
       <FilterGroup title="Weave Type" options={weaveOptions} selected={weaves} onToggle={(v) => toggle(weaves, setWeaves, v)} />
       <FilterGroup title="Price" options={priceOptions} selected={priceBuckets} onToggle={(v) => toggle(priceBuckets, setPriceBuckets, v)} />
     </>
@@ -156,8 +186,20 @@ export default function ShopContent({
   return (
     <div className="mx-auto max-w-7xl px-6 py-12">
       <div className="mb-10 text-center">
-        <p className="text-xs font-medium uppercase tracking-[0.3em] text-brand-500">Shop All</p>
-        <h1 className="mt-2 font-serif text-3xl text-clay-800 md:text-4xl">The Full Collection</h1>
+        <p className="text-xs font-medium uppercase tracking-[0.3em] text-brand-500">
+          {searchQuery.trim() ? "Search Results" : "Shop All"}
+        </p>
+        <h1 className="mt-2 font-serif text-3xl text-clay-800 md:text-4xl">
+          {searchQuery.trim() ? `“${searchQuery.trim()}”` : "The Full Collection"}
+        </h1>
+        {searchQuery.trim() && (
+          <button
+            onClick={() => setSearchQuery("")}
+            className="mt-3 text-xs font-medium uppercase tracking-wider text-brand-600 hover:underline"
+          >
+            Clear search
+          </button>
+        )}
       </div>
 
       <div className="flex flex-col gap-10 lg:flex-row">

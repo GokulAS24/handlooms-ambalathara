@@ -1,5 +1,6 @@
 import { Suspense } from "react";
 import Header from "@/components/Header";
+import SecondaryNav from "@/components/SecondaryNav";
 import HighlightBar from "@/components/HighlightBar";
 import Footer from "@/components/Footer";
 import ScrollProgress from "@/components/ScrollProgress";
@@ -21,6 +22,7 @@ export default async function SiteLayout({ children }: { children: React.ReactNo
           </Suspense>
           <ScrollProgress />
           <Header settings={settings} />
+          <SecondaryNav />
           <HighlightBar />
           <main className="flex-1">{children}</main>
           <Footer settings={settings} categories={categories} />
