@@ -112,25 +112,11 @@ export default function Header({ settings }: { settings: SettingsWithRelations }
       }`}
     >
       <div
-        className={`relative mx-auto flex max-w-7xl items-center justify-between px-6 transition-[padding] duration-300 ${
+        className={`relative mx-auto flex max-w-7xl items-center gap-4 px-6 transition-[padding] duration-300 ${
           scrolled ? "py-2.5" : "py-4"
         }`}
       >
-        <button
-          aria-label="Toggle menu"
-          className="shrink-0 text-clay-700 xl:hidden"
-          onClick={() => setOpen((prev) => !prev)}
-        >
-          {open ? <X size={22} /> : <Menu size={22} />}
-        </button>
-
-        <div className="hidden min-w-0 flex-1 items-center gap-2.5 xl:flex">
-          {highlights.map((item) => (
-            <HighlightBadge key={item.label} {...item} />
-          ))}
-        </div>
-
-        <Link href="/" className="flex flex-1 items-center justify-center xl:flex-none">
+        <Link href="/" className="flex shrink-0 items-center">
           <Logo
             markClassName="h-7 w-auto sm:h-9"
             wordmarkClassName="text-sm sm:text-lg"
@@ -139,10 +125,18 @@ export default function Header({ settings }: { settings: SettingsWithRelations }
           />
         </Link>
 
-        <div className="hidden min-w-0 flex-1 items-center justify-end gap-7 xl:flex">
+        <div className="hidden items-center gap-7 xl:flex">
           {rightLinks.map((link) => (
             <NavLink key={link.label} {...link} />
           ))}
+        </div>
+
+        <div className="ml-auto hidden shrink-0 items-center gap-7 xl:flex">
+          <div className="flex items-center gap-2.5">
+            {highlights.map((item) => (
+              <HighlightBadge key={item.label} {...item} />
+            ))}
+          </div>
           <div className="flex shrink-0 items-center gap-5">
             {isHome && (
               <ShareButton
@@ -167,7 +161,7 @@ export default function Header({ settings }: { settings: SettingsWithRelations }
           </div>
         </div>
 
-        <div className="flex shrink-0 items-center gap-3 xl:hidden">
+        <div className="ml-auto flex shrink-0 items-center gap-3 xl:hidden">
           {isHome && (
             <ShareButton
               title={settings.siteName}
@@ -188,6 +182,13 @@ export default function Header({ settings }: { settings: SettingsWithRelations }
           >
             <WhatsAppIcon className="h-[21px] w-[21px]" />
           </a>
+          <button
+            aria-label="Toggle menu"
+            className="shrink-0 text-clay-700"
+            onClick={() => setOpen((prev) => !prev)}
+          >
+            {open ? <X size={22} /> : <Menu size={22} />}
+          </button>
         </div>
       </div>
 
