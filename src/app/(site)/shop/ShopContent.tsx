@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { motion } from "framer-motion";
 import { SlidersHorizontal, X } from "lucide-react";
@@ -97,6 +97,23 @@ export default function ShopContent({
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState(initialSearch);
 
+  // Re-sync from the URL on every navigation, not just the first mount —
+  // clicking Men -> Women while already on /shop updates the query string
+  // but Next.js reuses this component instance, so without this the state
+  // set from the *first* render's searchParams would never change again.
+  const searchParamsKey = searchParams.toString();
+  useEffect(() => {
+    const categorySlug = searchParams.get("category");
+    const categoryName = categorySlug ? categories.find((c) => c.slug === categorySlug)?.name : undefined;
+    setSelectedCategories(new Set(categoryName ? [categoryName] : []));
+
+    const audience = searchParams.get("audience")?.toUpperCase();
+    setSelectedAudiences(new Set(isAudience(audience) ? [audience] : []));
+
+    setSearchQuery(searchParams.get("search") ?? "");
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchParamsKey]);
+
   const categoryOptions = useMemo(
     () => categories.map((c) => ({ label: c.name, count: c._count.products })),
     [categories]
@@ -156,6 +173,9 @@ export default function ShopContent({
 
   const activeFilterCount = selectedCategories.size + selectedAudiences.size + weaves.size + priceBuckets.size;
 
+  const activeAudienceLabel =
+    selectedAudiences.size === 1 ? AUDIENCE_LABELS[[...selectedAudiences][0] as (typeof AUDIENCES)[number]] : null;
+
   function clearAll() {
     setSelectedCategories(new Set());
     setSelectedAudiences(new Set());
@@ -187,10 +207,14 @@ export default function ShopContent({
     <div className="mx-auto max-w-7xl px-6 py-12">
       <div className="mb-10 text-center">
         <p className="text-xs font-medium uppercase tracking-[0.3em] text-brand-500">
-          {searchQuery.trim() ? "Search Results" : "Shop All"}
+          {searchQuery.trim() ? "Search Results" : activeAudienceLabel ? `${activeAudienceLabel}'s Collection` : "Shop All"}
         </p>
         <h1 className="mt-2 font-serif text-3xl text-clay-800 md:text-4xl">
-          {searchQuery.trim() ? `“${searchQuery.trim()}”` : "The Full Collection"}
+          {searchQuery.trim()
+            ? `“${searchQuery.trim()}”`
+            : activeAudienceLabel
+              ? `The Full Collection — ${activeAudienceLabel}`
+              : "The Full Collection"}
         </h1>
         {searchQuery.trim() && (
           <button
