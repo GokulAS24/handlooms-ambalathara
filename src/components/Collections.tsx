@@ -23,10 +23,10 @@ export default function Collections({ categories }: { categories: Category[] }) 
           <motion.a
             key={category.id}
             href={`/shop?category=${category.slug}`}
-            initial={{ clipPath: "inset(100% 0% 0% 0%)" }}
-            whileInView={{ clipPath: "inset(0% 0% 0% 0%)" }}
+            initial={{ opacity: 0, y: 24 }}
+            whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-80px" }}
-            transition={{ duration: 0.8, delay: index * 0.1, ease: [0.65, 0, 0.35, 1] }}
+            transition={{ duration: 0.6, delay: index * 0.08, ease: [0.65, 0, 0.35, 1] }}
             className="group relative block aspect-[3/4] overflow-hidden rounded-sm bg-clay-800"
           >
             {category.imageUrl ? (
