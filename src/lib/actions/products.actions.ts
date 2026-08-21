@@ -133,6 +133,13 @@ export async function deleteProductImage(productId: string, imageId: string) {
   revalidatePath(`/product/${productId}`);
 }
 
+export async function replaceProductImage(productId: string, imageId: string, url: string) {
+  await requireAdmin();
+  await prisma.productImage.update({ where: { id: imageId }, data: { url } });
+  revalidatePath(`/admin/products/${productId}/edit`);
+  revalidatePath(`/product/${productId}`);
+}
+
 export async function addProductSpec(productId: string, formData: FormData) {
   await requireAdmin();
   await prisma.productSpec.create({

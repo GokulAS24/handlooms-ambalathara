@@ -4,12 +4,12 @@ import {
   getProductById,
   updateProduct,
   addProductImage,
-  deleteProductImage,
   addProductSpec,
   deleteProductSpec,
 } from "@/lib/actions/products.actions";
 import { getCategories } from "@/lib/actions/categories.actions";
 import ImageUpload from "@/components/admin/ImageUpload";
+import ProductImageTile from "@/components/admin/ProductImageTile";
 import SubmitButton from "@/components/SubmitButton";
 
 export default async function EditProductPage({ params }: { params: Promise<{ id: string }> }) {
@@ -26,21 +26,18 @@ export default async function EditProductPage({ params }: { params: Promise<{ id
 
       <section>
         <h2 className="mb-3 text-lg font-semibold">Images</h2>
+        <p className="mb-3 text-xs text-gray-500">
+          Hover a photo and click the pencil to replace it in place, or the × to remove it.
+        </p>
         <div className="mb-4 flex flex-wrap gap-3">
           {product.images.map((img) => (
-            // eslint-disable-next-line @next/next/no-img-element
-            <div key={img.id} className="relative h-24 w-24 overflow-hidden rounded border">
-              <img src={img.url} alt={img.altText ?? ""} className="h-full w-full object-cover" />
-              <form action={deleteProductImage.bind(null, product.id, img.id)}>
-                <SubmitButton
-                  pendingLabel=""
-                  ariaLabel="Delete image"
-                  className="absolute right-1 top-1 flex h-5 w-5 items-center justify-center rounded-full bg-black/60 text-xs text-white disabled:opacity-60"
-                >
-                  ×
-                </SubmitButton>
-              </form>
-            </div>
+            <ProductImageTile
+              key={img.id}
+              productId={product.id}
+              imageId={img.id}
+              url={img.url}
+              altText={img.altText}
+            />
           ))}
         </div>
         <form action={addProductImage.bind(null, product.id)} className="flex items-end gap-3">
