@@ -3,13 +3,12 @@ import ProductForm from "../../ProductForm";
 import {
   getProductById,
   updateProduct,
-  addProductImage,
   addProductSpec,
   deleteProductSpec,
 } from "@/lib/actions/products.actions";
 import { getCategories } from "@/lib/actions/categories.actions";
-import ImageUpload from "@/components/admin/ImageUpload";
 import ProductImageTile from "@/components/admin/ProductImageTile";
+import AddProductImage from "@/components/admin/AddProductImage";
 import SubmitButton from "@/components/SubmitButton";
 
 export default async function EditProductPage({ params }: { params: Promise<{ id: string }> }) {
@@ -27,9 +26,10 @@ export default async function EditProductPage({ params }: { params: Promise<{ id
       <section>
         <h2 className="mb-3 text-lg font-semibold">Images</h2>
         <p className="mb-3 text-xs text-gray-500">
-          Hover a photo and click the pencil to replace it in place, or the × to remove it.
+          Hover a photo and click the pencil to replace it in place, or the × to remove it. Adding a new photo
+          saves immediately — no extra button to click.
         </p>
-        <div className="mb-4 flex flex-wrap gap-3">
+        <div className="flex flex-wrap gap-3">
           {product.images.map((img) => (
             <ProductImageTile
               key={img.id}
@@ -39,13 +39,8 @@ export default async function EditProductPage({ params }: { params: Promise<{ id
               altText={img.altText}
             />
           ))}
+          <AddProductImage productId={product.id} />
         </div>
-        <form action={addProductImage.bind(null, product.id)} className="flex items-end gap-3">
-          <ImageUpload name="url" />
-          <SubmitButton pendingLabel="Adding…" className="border px-3 py-2 disabled:opacity-60">
-            Add Image
-          </SubmitButton>
-        </form>
       </section>
 
       <section>
