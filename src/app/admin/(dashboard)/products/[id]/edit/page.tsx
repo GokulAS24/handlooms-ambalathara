@@ -5,6 +5,7 @@ import {
   updateProduct,
   addProductSpec,
   deleteProductSpec,
+  getProductStyles,
 } from "@/lib/actions/products.actions";
 import { getCategories } from "@/lib/actions/categories.actions";
 import ProductImageTile from "@/components/admin/ProductImageTile";
@@ -13,14 +14,18 @@ import SubmitButton from "@/components/SubmitButton";
 
 export default async function EditProductPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  const [product, categories] = await Promise.all([getProductById(id), getCategories()]);
+  const [product, categories, styles] = await Promise.all([
+    getProductById(id),
+    getCategories(),
+    getProductStyles(),
+  ]);
   if (!product) notFound();
 
   return (
     <div className="flex flex-col gap-10">
       <div>
         <h1 className="mb-6 text-2xl font-semibold">Edit Product</h1>
-        <ProductForm product={product} categories={categories} action={updateProduct.bind(null, id)} />
+        <ProductForm product={product} categories={categories} styles={styles} action={updateProduct.bind(null, id)} />
       </div>
 
       <section>

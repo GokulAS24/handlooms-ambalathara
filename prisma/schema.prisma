@@ -140,6 +140,8 @@ model Product {
   pattern        String?
   washCare       String?
   audience       String?
+  style          String?
+  color          String?
   avgRating      Float           @default(0)
   reviewCount    Int             @default(0)
   categoryId     String

@@ -19,6 +19,8 @@ const productSchema = z.object({
   pattern: z.string().optional(),
   washCare: z.string().optional(),
   audience: z.enum(AUDIENCES).optional(),
+  style: z.string().optional(),
+  color: z.string().optional(),
   categoryId: z.string().min(1),
   isActive: z.coerce.boolean().default(true),
   isFeatured: z.coerce.boolean().default(false),
@@ -34,6 +36,15 @@ export async function getProducts() {
     include: { category: true, images: { orderBy: { order: "asc" } } },
     orderBy: { createdAt: "desc" },
   });
+}
+
+export async function getProductStyles() {
+  const rows = await prisma.product.findMany({
+    where: { style: { not: null } },
+    select: { style: true },
+    distinct: ["style"],
+  });
+  return rows.map((r) => r.style as string).sort();
 }
 
 export async function getProductById(id: string) {
@@ -60,6 +71,8 @@ export async function createProduct(formData: FormData) {
     pattern: formData.get("pattern") || undefined,
     washCare: formData.get("washCare") || undefined,
     audience: formData.get("audience") || undefined,
+    style: (formData.get("style") as string | null)?.trim() || undefined,
+    color: (formData.get("color") as string | null)?.trim() || undefined,
     categoryId: formData.get("categoryId"),
     isActive: formData.get("isActive") === "on",
     isFeatured: formData.get("isFeatured") === "on",
@@ -93,6 +106,8 @@ export async function updateProduct(id: string, formData: FormData) {
     pattern: formData.get("pattern") || undefined,
     washCare: formData.get("washCare") || undefined,
     audience: formData.get("audience") || undefined,
+    style: (formData.get("style") as string | null)?.trim() || undefined,
+    color: (formData.get("color") as string | null)?.trim() || undefined,
     categoryId: formData.get("categoryId"),
     isActive: formData.get("isActive") === "on",
     isFeatured: formData.get("isFeatured") === "on",
@@ -100,7 +115,13 @@ export async function updateProduct(id: string, formData: FormData) {
 
   await prisma.product.update({
     where: { id },
-    data: { ...parsed, audience: parsed.audience ?? null, slug: slugify(parsed.name) },
+    data: {
+      ...parsed,
+      audience: parsed.audience ?? null,
+      style: parsed.style ?? null,
+      color: parsed.color ?? null,
+      slug: slugify(parsed.name),
+    },
   });
 
   revalidatePath("/shop");

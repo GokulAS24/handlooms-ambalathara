@@ -8,10 +8,12 @@ import { AUDIENCES, AUDIENCE_LABELS } from "@/lib/audience";
 export default function ProductForm({
   product,
   categories,
+  styles,
   action,
 }: {
   product?: Product;
   categories: Category[];
+  styles: string[];
   action: (formData: FormData) => void;
 }) {
   return (
@@ -53,6 +55,37 @@ export default function ProductForm({
       </select>
       <p className="text-xs text-gray-500">
         Controls which of the Men / Women / Kids links on the site show this product.
+      </p>
+
+      <div className="grid grid-cols-2 gap-3">
+        <div>
+          <label className="text-sm">Style</label>
+          <input
+            name="style"
+            list="product-styles"
+            defaultValue={product?.style ?? ""}
+            placeholder="e.g. Mayura Setsaree"
+            className="w-full border p-2"
+          />
+          <datalist id="product-styles">
+            {styles.map((s) => (
+              <option key={s} value={s} />
+            ))}
+          </datalist>
+        </div>
+        <div>
+          <label className="text-sm">Color</label>
+          <input
+            name="color"
+            defaultValue={product?.color ?? ""}
+            placeholder="e.g. Crimson"
+            className="w-full border p-2"
+          />
+        </div>
+      </div>
+      <p className="-mt-2 text-xs text-gray-500">
+        Products that share the exact same Style are grouped as color variants on the product page. Reuse an
+        existing style from the list to group this with it.
       </p>
 
       <div className="grid grid-cols-2 gap-3">

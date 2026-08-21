@@ -39,3 +39,11 @@ export const getRelatedProducts = cache(async (productId: string, categoryId: st
     take: 3,
   });
 });
+
+export const getProductVariants = cache(async (style: string, excludeId: string) => {
+  return prisma.product.findMany({
+    where: { style: { equals: style, mode: "insensitive" }, id: { not: excludeId }, isActive: true },
+    select: { id: true, name: true, color: true, images: { orderBy: { order: "asc" }, take: 1 } },
+    orderBy: { color: "asc" },
+  });
+});

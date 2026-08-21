@@ -20,16 +20,25 @@ type ProductFull = Prisma.ProductGetPayload<{
   include: { images: true; specs: true; reviews: true; category: true };
 }>;
 
+type ProductVariant = {
+  id: string;
+  name: string;
+  color: string | null;
+  images: { url: string }[];
+};
+
 const WHATSAPP_GREEN = "#25D366";
 const CLAY_900 = "#190f0a";
 
 export default function ProductDetailClient({
   product,
   related,
+  variants,
   whatsappNumber,
 }: {
   product: ProductFull;
   related: ProductCardData[];
+  variants: ProductVariant[];
   whatsappNumber: string;
 }) {
   const { isWishlisted, toggleWishlist } = useWishlist();
@@ -108,6 +117,32 @@ export default function ProductDetailClient({
           {product.reviewCount > 0 && (
             <div className="mt-3">
               <StarRating rating={product.avgRating} reviewCount={product.reviewCount} size={15} />
+            </div>
+          )}
+
+          {(product.color || variants.length > 0) && (
+            <div className="mt-4">
+              <p className="text-xs font-medium uppercase tracking-[0.15em] text-clay-400">
+                Color{product.color ? `: ${product.color}` : ""}
+              </p>
+              <div className="mt-2 flex flex-wrap items-center gap-2.5">
+                <span
+                  aria-label={product.color ?? "Current color"}
+                  title={product.color ?? undefined}
+                  className="h-7 w-7 rounded-full border-2 border-clay-800 ring-2 ring-offset-2 ring-clay-800"
+                  style={{ backgroundColor: product.color?.toLowerCase() || "#d9d2c8" }}
+                />
+                {variants.map((v) => (
+                  <Link
+                    key={v.id}
+                    href={`/product/${v.id}`}
+                    aria-label={v.color ?? v.name}
+                    title={v.color ?? v.name}
+                    className="h-7 w-7 rounded-full border border-clay-300 transition-transform hover:scale-110"
+                    style={{ backgroundColor: v.color?.toLowerCase() || "#d9d2c8" }}
+                  />
+                ))}
+              </div>
             </div>
           )}
 
