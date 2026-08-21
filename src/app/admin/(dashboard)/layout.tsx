@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { auth, signOut } from "@/auth";
+import SubmitButton from "@/components/SubmitButton";
 
 const navItems = [
   { href: "/admin", label: "Dashboard" },
@@ -29,7 +30,9 @@ export default async function AdminLayout({ children }: { children: React.ReactN
           <div className="mt-8">
             <p className="mb-2 text-xs text-gray-500">{session.user.email}</p>
             <form action={async () => { "use server"; await signOut({ redirectTo: "/admin/login" }); }}>
-              <button type="submit" className="text-sm text-red-600">Sign Out</button>
+              <SubmitButton pendingLabel="Signing out…" className="text-sm text-red-600 disabled:opacity-60">
+                Sign Out
+              </SubmitButton>
             </form>
           </div>
         )}

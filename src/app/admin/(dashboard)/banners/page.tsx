@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { getHeroBanners, deleteBanner } from "@/lib/actions/banners.actions";
+import SubmitButton from "@/components/SubmitButton";
 
 export default async function AdminBannersPage() {
   const banners = await getHeroBanners();
@@ -33,7 +34,9 @@ export default async function AdminBannersPage() {
               <td className="flex gap-3 py-2">
                 <Link href={`/admin/banners/${b.id}/edit`} className="underline">Edit</Link>
                 <form action={deleteBanner.bind(null, b.id)}>
-                  <button type="submit" className="text-red-600">Delete</button>
+                  <SubmitButton pendingLabel="Deleting…" className="text-red-600 disabled:opacity-60">
+                    Delete
+                  </SubmitButton>
                 </form>
               </td>
             </tr>

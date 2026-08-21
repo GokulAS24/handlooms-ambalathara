@@ -2,6 +2,7 @@
 
 import { Category } from "@prisma/client";
 import ImageUpload from "@/components/admin/ImageUpload";
+import SubmitButton from "@/components/SubmitButton";
 
 export default function CategoryForm({
   category,
@@ -40,7 +41,9 @@ export default function CategoryForm({
         Active
       </label>
 
-      <button type="submit" className="mt-2 bg-black py-2 text-white">Save Category</button>
+      <SubmitButton pendingLabel="Saving…" className="mt-2 bg-black py-2 text-white disabled:opacity-60">
+        Save Category
+      </SubmitButton>
     </form>
   );
 }

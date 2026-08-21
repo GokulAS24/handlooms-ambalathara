@@ -1,5 +1,6 @@
 import { getAdmins, createAdmin, deleteAdmin } from "@/lib/actions/admins.actions";
 import { auth } from "@/auth";
+import SubmitButton from "@/components/SubmitButton";
 
 export default async function AdminTeamPage() {
   const [admins, session] = await Promise.all([getAdmins(), auth()]);
@@ -26,7 +27,9 @@ export default async function AdminTeamPage() {
               <td>
                 {session?.user.id !== a.id && (
                   <form action={deleteAdmin.bind(null, a.id)}>
-                    <button type="submit" className="text-red-600">Delete</button>
+                    <SubmitButton pendingLabel="Deleting…" className="text-red-600 disabled:opacity-60">
+                      Delete
+                    </SubmitButton>
                   </form>
                 )}
               </td>
@@ -41,7 +44,9 @@ export default async function AdminTeamPage() {
           <input name="name" placeholder="Name" required className="border p-2" />
           <input name="email" type="email" placeholder="Email" required className="border p-2" />
           <input name="password" type="password" placeholder="Password (min 8 chars)" required minLength={8} className="border p-2" />
-          <button type="submit" className="bg-black py-2 text-white">Create Admin</button>
+          <SubmitButton pendingLabel="Creating…" className="bg-black py-2 text-white disabled:opacity-60">
+            Create Admin
+          </SubmitButton>
         </form>
       </section>
     </div>

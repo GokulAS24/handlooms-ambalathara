@@ -3,12 +3,14 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { signIn } from "next-auth/react";
+import SubmitButton from "@/components/SubmitButton";
 
 export default function AdminLoginPage() {
   const router = useRouter();
   const [error, setError] = useState("");
 
   async function handleSubmit(formData: FormData) {
+    setError("");
     const res = await signIn("credentials", {
       email: formData.get("email"),
       password: formData.get("password"),
@@ -20,13 +22,14 @@ export default function AdminLoginPage() {
 
   return (
     <div className="mx-auto flex min-h-screen max-w-sm flex-col justify-center px-6">
-      <h1 className="mb-2 text-2xl font-semibold">Admin Login</h1>
-      <p className="mb-6 text-sm text-gray-500">admin@ambalatharahandlooms.in / changeme123</p>
+      <h1 className="mb-6 text-2xl font-semibold">Admin Login</h1>
       <form action={handleSubmit} className="flex flex-col gap-4">
         <input name="email" type="email" placeholder="Email" required className="border p-2" defaultValue="admin@ambalatharahandlooms.in" />
         <input name="password" type="password" placeholder="Password" required className="border p-2" />
         {error && <p className="text-sm text-red-600">{error}</p>}
-        <button type="submit" className="bg-black py-2 text-white">Sign In</button>
+        <SubmitButton pendingLabel="Signing in…" className="bg-black py-2 text-white disabled:opacity-60">
+          Sign In
+        </SubmitButton>
       </form>
     </div>
   );

@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import { getPageBySlug, createSection, updateSection, deleteSection, updatePageMeta } from "@/lib/actions/pages.actions";
 import ImageUpload from "@/components/admin/ImageUpload";
+import SubmitButton from "@/components/SubmitButton";
 
 export default async function AdminPageEditor({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
@@ -13,7 +14,9 @@ export default async function AdminPageEditor({ params }: { params: Promise<{ sl
         <h1 className="mb-4 text-2xl font-semibold">{page.title}</h1>
         <form action={updatePageMeta.bind(null, page.id)} className="flex max-w-md gap-2">
           <input name="title" defaultValue={page.title} className="flex-1 border p-2" />
-          <button type="submit" className="border px-3">Save Title</button>
+          <SubmitButton pendingLabel="Saving…" className="border px-3 disabled:opacity-60">
+            Save Title
+          </SubmitButton>
         </form>
       </div>
 
@@ -32,8 +35,16 @@ export default async function AdminPageEditor({ params }: { params: Promise<{ sl
               <label className="text-sm">Order</label>
               <input name="order" type="number" defaultValue={s.order} className="border p-2" />
               <div className="flex gap-3">
-                <button type="submit" className="bg-black px-3 py-1.5 text-sm text-white">Save</button>
-                <button formAction={deleteSection.bind(null, s.id)} className="px-3 py-1.5 text-sm text-red-600">Delete</button>
+                <SubmitButton pendingLabel="Saving…" className="bg-black px-3 py-1.5 text-sm text-white disabled:opacity-60">
+                  Save
+                </SubmitButton>
+                <SubmitButton
+                  formAction={deleteSection.bind(null, s.id)}
+                  pendingLabel="Deleting…"
+                  className="px-3 py-1.5 text-sm text-red-600 disabled:opacity-60"
+                >
+                  Delete
+                </SubmitButton>
               </div>
             </form>
           ))}
@@ -48,7 +59,9 @@ export default async function AdminPageEditor({ params }: { params: Promise<{ sl
           <textarea name="body" placeholder="Body" className="border p-2" />
           <ImageUpload name="imageUrl" label="Image" />
           <input name="order" type="number" placeholder="Order" className="border p-2" />
-          <button type="submit" className="bg-black py-2 text-white">Add Section</button>
+          <SubmitButton pendingLabel="Adding…" className="bg-black py-2 text-white disabled:opacity-60">
+            Add Section
+          </SubmitButton>
         </form>
       </section>
     </div>

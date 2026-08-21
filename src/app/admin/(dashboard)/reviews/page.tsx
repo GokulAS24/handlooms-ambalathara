@@ -1,4 +1,5 @@
 import { getReviews, deleteReview } from "@/lib/actions/reviews.actions";
+import SubmitButton from "@/components/SubmitButton";
 
 export default async function AdminReviewsPage() {
   const reviews = await getReviews();
@@ -25,7 +26,9 @@ export default async function AdminReviewsPage() {
               <td className="max-w-sm">{r.comment}</td>
               <td>
                 <form action={deleteReview.bind(null, r.id, r.productId)}>
-                  <button type="submit" className="text-red-600">Delete</button>
+                  <SubmitButton pendingLabel="Deleting…" className="text-red-600 disabled:opacity-60">
+                    Delete
+                  </SubmitButton>
                 </form>
               </td>
             </tr>

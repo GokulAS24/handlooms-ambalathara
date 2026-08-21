@@ -2,6 +2,7 @@
 
 import { Category, Product } from "@prisma/client";
 import MultiImageUpload from "@/components/admin/MultiImageUpload";
+import SubmitButton from "@/components/SubmitButton";
 import { AUDIENCES, AUDIENCE_LABELS } from "@/lib/audience";
 
 export default function ProductForm({
@@ -84,7 +85,9 @@ export default function ProductForm({
         Featured
       </label>
 
-      <button type="submit" className="mt-2 bg-black py-2 text-white">Save Product</button>
+      <SubmitButton pendingLabel="Saving…" className="mt-2 bg-black py-2 text-white disabled:opacity-60">
+        Save Product
+      </SubmitButton>
     </form>
   );
 }

@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { getPromoBlocks, deletePromoBlock } from "@/lib/actions/promos.actions";
+import SubmitButton from "@/components/SubmitButton";
 
 export default async function AdminPromosPage() {
   const promos = await getPromoBlocks();
@@ -28,7 +29,9 @@ export default async function AdminPromosPage() {
               <td className="flex gap-3 py-2">
                 <Link href={`/admin/promos/${p.id}/edit`} className="underline">Edit</Link>
                 <form action={deletePromoBlock.bind(null, p.id)}>
-                  <button type="submit" className="text-red-600">Delete</button>
+                  <SubmitButton pendingLabel="Deleting…" className="text-red-600 disabled:opacity-60">
+                    Delete
+                  </SubmitButton>
                 </form>
               </td>
             </tr>

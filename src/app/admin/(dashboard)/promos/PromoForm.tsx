@@ -2,6 +2,7 @@
 
 import { PromoBlock } from "@prisma/client";
 import ImageUpload from "@/components/admin/ImageUpload";
+import SubmitButton from "@/components/SubmitButton";
 
 export default function PromoForm({
   promo,
@@ -31,7 +32,9 @@ export default function PromoForm({
         Active
       </label>
 
-      <button type="submit" className="mt-2 bg-black py-2 text-white">Save Promo</button>
+      <SubmitButton pendingLabel="Saving…" className="mt-2 bg-black py-2 text-white disabled:opacity-60">
+        Save Promo
+      </SubmitButton>
     </form>
   );
 }

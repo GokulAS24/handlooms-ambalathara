@@ -1,5 +1,6 @@
 import { getSiteSettings, updateSiteSettings, addPhoneNumber, deletePhoneNumber, addEmail, deleteEmail, addSocialLink, deleteSocialLink } from "@/lib/actions/settings.actions";
 import ImageUpload from "@/components/admin/ImageUpload";
+import SubmitButton from "@/components/SubmitButton";
 
 export default async function AdminSettingsPage() {
   const settings = await getSiteSettings();
@@ -28,7 +29,9 @@ export default async function AdminSettingsPage() {
         <label className="text-sm">WhatsApp Number (international, no +)</label>
         <input name="whatsappNumber" defaultValue={settings.whatsappNumber} className="border p-2" />
 
-        <button type="submit" className="mt-2 bg-black py-2 text-white">Save Settings</button>
+        <SubmitButton pendingLabel="Saving…" className="mt-2 bg-black py-2 text-white disabled:opacity-60">
+          Save Settings
+        </SubmitButton>
       </form>
 
       <section>
@@ -38,7 +41,9 @@ export default async function AdminSettingsPage() {
             <li key={p.id} className="flex items-center gap-3 text-sm">
               {p.label}: {p.number}
               <form action={deletePhoneNumber.bind(null, p.id)}>
-                <button type="submit" className="text-red-600">Delete</button>
+                <SubmitButton pendingLabel="Deleting…" className="text-red-600 disabled:opacity-60">
+                  Delete
+                </SubmitButton>
               </form>
             </li>
           ))}
@@ -46,7 +51,9 @@ export default async function AdminSettingsPage() {
         <form action={addPhoneNumber} className="flex gap-2">
           <input name="label" placeholder="Label" className="border p-2" required />
           <input name="number" placeholder="Number" className="border p-2" required />
-          <button type="submit" className="border px-3">Add</button>
+          <SubmitButton pendingLabel="Adding…" className="border px-3 disabled:opacity-60">
+            Add
+          </SubmitButton>
         </form>
       </section>
 
@@ -57,7 +64,9 @@ export default async function AdminSettingsPage() {
             <li key={e.id} className="flex items-center gap-3 text-sm">
               {e.label}: {e.email}
               <form action={deleteEmail.bind(null, e.id)}>
-                <button type="submit" className="text-red-600">Delete</button>
+                <SubmitButton pendingLabel="Deleting…" className="text-red-600 disabled:opacity-60">
+                  Delete
+                </SubmitButton>
               </form>
             </li>
           ))}
@@ -65,7 +74,9 @@ export default async function AdminSettingsPage() {
         <form action={addEmail} className="flex gap-2">
           <input name="label" placeholder="Label" className="border p-2" required />
           <input name="email" type="email" placeholder="Email" className="border p-2" required />
-          <button type="submit" className="border px-3">Add</button>
+          <SubmitButton pendingLabel="Adding…" className="border px-3 disabled:opacity-60">
+            Add
+          </SubmitButton>
         </form>
       </section>
 
@@ -76,7 +87,9 @@ export default async function AdminSettingsPage() {
             <li key={s.id} className="flex items-center gap-3 text-sm">
               {s.platform}: {s.url}
               <form action={deleteSocialLink.bind(null, s.id)}>
-                <button type="submit" className="text-red-600">Delete</button>
+                <SubmitButton pendingLabel="Deleting…" className="text-red-600 disabled:opacity-60">
+                  Delete
+                </SubmitButton>
               </form>
             </li>
           ))}
@@ -91,7 +104,9 @@ export default async function AdminSettingsPage() {
             <option value="WHATSAPP">WhatsApp</option>
           </select>
           <input name="url" placeholder="URL" className="border p-2" required />
-          <button type="submit" className="border px-3">Add</button>
+          <SubmitButton pendingLabel="Adding…" className="border px-3 disabled:opacity-60">
+            Add
+          </SubmitButton>
         </form>
       </section>
     </div>

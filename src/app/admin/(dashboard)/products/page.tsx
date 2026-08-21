@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { getProducts, deleteProduct } from "@/lib/actions/products.actions";
 import BulkImportForm from "@/components/admin/BulkImportForm";
+import SubmitButton from "@/components/SubmitButton";
 
 export default async function AdminProductsPage() {
   const products = await getProducts();
@@ -36,7 +37,9 @@ export default async function AdminProductsPage() {
               <td className="flex gap-3 py-2">
                 <Link href={`/admin/products/${p.id}/edit`} className="underline">Edit</Link>
                 <form action={deleteProduct.bind(null, p.id)}>
-                  <button type="submit" className="text-red-600">Delete</button>
+                  <SubmitButton pendingLabel="Deleting…" className="text-red-600 disabled:opacity-60">
+                    Delete
+                  </SubmitButton>
                 </form>
               </td>
             </tr>
